@@ -14,10 +14,13 @@ RUN \
 # Étape pour construire le code source
 FROM base AS builder
 WORKDIR /app
+# Installer OpenSSL dans l'étape de build
+RUN apk add --no-cache openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx prisma@5.10.2 generate
+# Utiliser la version locale de Prisma au lieu de npx
+RUN ./node_modules/.bin/prisma generate
 RUN yarn build
 
 # Image de production
@@ -36,9 +39,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-# Exécute les migrations Prisma et démarre l'application
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+# Utiliser la version locale de Prisma pour les migrations
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node server.js"]
