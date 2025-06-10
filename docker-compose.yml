@@ -9,7 +9,7 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/registration_app
-      - NODE_ENV=production
+      - NODE_ENV=production #production
     depends_on:
       - db
     restart: always

@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   try {
     // Parse and validate request body
     const body = await request.json()
-    console.log("Received data:", body)
+    //console.log("Received data:", body)
 
     const validatedData = personSchema.parse(body)
 
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       },
     })
 
-    console.log("Created person:", person)
+    //console.log("Created person:", person)
 
     // Return person data and QR code
     return NextResponse.json({

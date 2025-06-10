@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Système d'Enregistrement avec QR Code",
   description: "Application d'enregistrement de personnes avec génération de QR code et scan",
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -20,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <div className="min-h-screen bg-gradient-to-b from-white to-blue-50 flex flex-col">
             <header className="border-b bg-white shadow-sm">
               <div className="container mx-auto py-4 px-4 flex items-center justify-between">

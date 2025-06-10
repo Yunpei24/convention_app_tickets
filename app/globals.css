@@ -97,3 +97,18 @@
   border: none !important;
   cursor: pointer !important;
 }
+
+/* Force le mode clair */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: light !important;
+}
+
+/* Assurer que les couleurs restent claires */
+body {
+  background-color: white !important;
+  color: #1f2937 !important;
+}
