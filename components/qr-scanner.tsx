@@ -105,18 +105,43 @@ export function QRScanner() {
     }
   }
 
+  // const onScanSuccess = async (decodedText: string) => {
+  //   if (isCleaningUp.current) return
+
+  //   // Stop scanning after successful scan
+  //   await stopScanner()
+  //   setLoading(true)
+
+  //   try {
+  //     // Verify the QR code with the backend
+  //     const response = await fetch(`/api/verify?code=${encodeURIComponent(decodedText)}`)
+  //     const data = await response.json()
+
+  //     setScanResult(data)
+  //   } catch (error) {
+  //     console.error("Error verifying QR code:", error)
+  //     setScanResult({
+  //       success: false,
+  //       message: "Erreur lors de la vérification du QR code.",
+  //     })
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
   const onScanSuccess = async (decodedText: string) => {
     if (isCleaningUp.current) return
-
+  
     // Stop scanning after successful scan
     await stopScanner()
     setLoading(true)
-
+  
     try {
-      // Verify the QR code with the backend
-      const response = await fetch(`/api/verify?code=${encodeURIComponent(decodedText)}`)
+      // Use the environment variable for the API URL
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || ''
+      const response = await fetch(`${apiUrl}/api/verify?code=${encodeURIComponent(decodedText)}`)
       const data = await response.json()
-
+  
       setScanResult(data)
     } catch (error) {
       console.error("Error verifying QR code:", error)

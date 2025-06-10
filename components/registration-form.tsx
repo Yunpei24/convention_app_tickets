@@ -45,28 +45,59 @@ export function RegistrationForm() {
     },
   })
 
+  // async function onSubmit(values: z.infer<typeof formSchema>) {
+  //   setIsSubmitting(true)
+  //   setError(null)
+
+  //   try {
+  //     console.log("Sending data:", values)
+
+  //     const response = await fetch("/api/register", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(values),
+  //     })
+
+  //     const data = await response.json()
+  //     console.log("Response data:", data)
+
+  //     if (!response.ok) {
+  //       throw new Error(data.error || "Erreur lors de l'enregistrement")
+  //     }
+
+  //     setRegistrationData(data)
+  //   } catch (error) {
+  //     console.error("Erreur:", error)
+  //     setError(error instanceof Error ? error.message : "Une erreur est survenue")
+  //   } finally {
+  //     setIsSubmitting(false)
+  //   }
+  // }
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true)
     setError(null)
-
+  
     try {
       console.log("Sending data:", values)
-
-      const response = await fetch("/api/register", {
+  
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || ''
+      const response = await fetch(`${apiUrl}/api/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(values),
       })
-
+  
       const data = await response.json()
       console.log("Response data:", data)
-
+  
       if (!response.ok) {
         throw new Error(data.error || "Erreur lors de l'enregistrement")
       }
-
+  
       setRegistrationData(data)
     } catch (error) {
       console.error("Erreur:", error)

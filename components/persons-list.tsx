@@ -25,18 +25,40 @@ export function PersonsList() {
   const [error, setError] = useState<string | null>(null)
   const [expandedQR, setExpandedQR] = useState<string | null>(null)
 
+  // const fetchPersons = async () => {
+  //   setLoading(true)
+  //   setError(null)
+
+  //   try {
+  //     const response = await fetch("/api/persons")
+  //     const data = await response.json()
+
+  //     if (!response.ok) {
+  //       throw new Error(data.message || "Erreur lors de la récupération des données")
+  //     }
+
+  //     setPersons(data.persons)
+  //   } catch (error) {
+  //     console.error("Error fetching persons:", error)
+  //     setError(error instanceof Error ? error.message : "Une erreur est survenue")
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
   const fetchPersons = async () => {
     setLoading(true)
     setError(null)
-
+  
     try {
-      const response = await fetch("/api/persons")
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || ''
+      const response = await fetch(`${apiUrl}/api/persons`)
       const data = await response.json()
-
+  
       if (!response.ok) {
         throw new Error(data.message || "Erreur lors de la récupération des données")
       }
-
+  
       setPersons(data.persons)
     } catch (error) {
       console.error("Error fetching persons:", error)
