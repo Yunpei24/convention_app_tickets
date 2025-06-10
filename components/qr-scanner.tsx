@@ -39,14 +39,14 @@ export function QRScanner() {
   const cleanupScanner = async () => {
     if (isCleaningUp.current) return
     isCleaningUp.current = true
-
+  
     try {
       if (scannerRef.current) {
         const state = scannerRef.current.getState()
         if (state === Html5QrcodeScannerState.SCANNING) {
           await scannerRef.current.stop()
         }
-        await scannerRef.current.clear()
+        // Ne pas appeler clear() ici
         scannerRef.current = null
       }
     } catch (error) {
@@ -58,27 +58,33 @@ export function QRScanner() {
 
   const startScanner = async () => {
     if (isCleaningUp.current) return
-
+  
     setScanning(true)
     setScanResult(null)
     setError(null)
-
+  
     try {
       // Clean up any existing scanner first
       await cleanupScanner()
-
+  
       // Wait a bit for DOM to be ready
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
+      await new Promise((resolve) => setTimeout(resolve, 500)) // Augmenté à 500ms
+  
+      // Vérifier si le conteneur existe
+      const container = document.getElementById(scannerContainerId)
+      if (!container) {
+        throw new Error("Container not found")
+      }
+  
       // Create new scanner instance
       scannerRef.current = new Html5Qrcode(scannerContainerId)
-
+  
       const config = {
         fps: 10,
         qrbox: { width: 250, height: 250 },
         aspectRatio: 1.0,
       }
-
+  
       await scannerRef.current.start({ facingMode: "environment" }, config, onScanSuccess, onScanFailure)
     } catch (error) {
       console.error("Error starting scanner:", error)
@@ -170,6 +176,8 @@ export function QRScanner() {
   const resetScanner = () => {
     setScanResult(null)
     setError(null)
+    setScanning(false) // Ajout de cette ligne
+    cleanupScanner() // Ajout de cette ligne
   }
 
   return (
