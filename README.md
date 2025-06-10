@@ -33,24 +33,24 @@ Une application web responsive permettant l'enregistrement de personnes avec gé
 
 ### 1. Cloner le projet
 
-\`\`\`bash
+```bash
 git clone <url-du-repo>
 cd registration-qr-app
-\`\`\`
+```
 
 ### 2. Installer les dépendances
 
-\`\`\`bash
+```bash
 npm install
 # ou
 yarn install
-\`\`\`
+```
 
 ### 3. Configuration de la base de données
 
 #### Option A : Avec Docker (Recommandé)
 
-\`\`\`bash
+```bash
 # Lancer PostgreSQL avec Docker
 docker run --name postgres-registration \
   -e POSTGRES_USER=postgres \
@@ -58,12 +58,12 @@ docker run --name postgres-registration \
   -e POSTGRES_DB=registration_app \
   -p 5432:5432 \
   -d postgres:14
-\`\`\`
+```
 
 #### Option B : Installation locale de PostgreSQL
 
 **Sur Ubuntu/Debian :**
-\`\`\`bash
+```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
 sudo systemctl start postgresql
@@ -71,17 +71,17 @@ sudo systemctl enable postgresql
 
 # Créer la base de données
 sudo -u postgres createdb registration_app
-\`\`\`
+```
 
 **Sur macOS :**
-\`\`\`bash
+```bash
 # Avec Homebrew
 brew install postgresql
 brew services start postgresql
 
 # Créer la base de données
 createdb registration_app
-\`\`\`
+```
 
 **Sur Windows :**
 1. Télécharger PostgreSQL depuis https://www.postgresql.org/download/windows/
@@ -98,17 +98,17 @@ createdb registration_app
 
 Créer un fichier `.env` à la racine du projet :
 
-\`\`\`env
+```env
 # Base de données
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/registration_app"
 
 # Pour un service cloud, remplacer par votre URL
 # DATABASE_URL="postgresql://username:password@host:port/database"
-\`\`\`
+```
 
 ### 5. Initialiser la base de données
 
-\`\`\`bash
+```bash
 # Générer le client Prisma
 npx prisma generate
 
@@ -117,21 +117,21 @@ npx prisma migrate dev --name init
 
 # (Optionnel) Ajouter des données de test
 npm run seed
-\`\`\`
+```
 
 ### 6. Lancer l'application
 
-\`\`\`bash
+```bash
 npm run dev
 # ou
 yarn dev
-\`\`\`
+```
 
 L'application sera accessible sur http://localhost:3000
 
 ## 📁 Structure du Projet
 
-\`\`\`
+```
 registration-qr-app/
 ├── app/                          # Pages et API Routes (Next.js App Router)
 │   ├── api/
@@ -161,7 +161,7 @@ registration-qr-app/
 ├── docker-compose.yml            # Configuration Docker
 ├── Dockerfile                    # Image Docker
 └── README.md                     # Documentation
-\`\`\`
+```
 
 ## 🔌 API Endpoints
 
@@ -169,17 +169,17 @@ registration-qr-app/
 Enregistre une nouvelle personne et génère un QR code.
 
 **Body :**
-\`\`\`json
+```json
 {
   "firstName": "Jean",
   "lastName": "Dupont",
   "email": "jean.dupont@exemple.fr",
   "phone": "0612345678"
 }
-\`\`\`
+```
 
 **Response :**
-\`\`\`json
+```json
 {
   "person": {
     "id": "uuid",
@@ -192,13 +192,13 @@ Enregistre une nouvelle personne et génère un QR code.
   },
   "qrCode": "uuid"
 }
-\`\`\`
+```
 
 ### GET /api/verify?code={qr_code}
 Vérifie un QR code et retourne les informations de la personne.
 
 **Response (succès) :**
-\`\`\`json
+```json
 {
   "success": true,
   "message": "Personne trouvée",
@@ -211,21 +211,21 @@ Vérifie un QR code et retourne les informations de la personne.
     "createdAt": "2024-01-01T00:00:00.000Z"
   }
 }
-\`\`\`
+```
 
 **Response (erreur) :**
-\`\`\`json
+```json
 {
   "success": false,
   "message": "Personne non trouvée"
 }
-\`\`\`
+```
 
 ### GET /api/persons
 Récupère la liste de toutes les personnes enregistrées.
 
 **Response :**
-\`\`\`json
+```json
 {
   "success": true,
   "persons": [
@@ -241,13 +241,13 @@ Récupère la liste de toutes les personnes enregistrées.
   ],
   "count": 1
 }
-\`\`\`
+```
 
 ## 🐳 Déploiement avec Docker
 
 ### Déploiement complet (App + Base de données)
 
-\`\`\`bash
+```bash
 # Construire et lancer tous les services
 docker-compose up -d
 
@@ -256,11 +256,11 @@ docker-compose logs -f
 
 # Arrêter les services
 docker-compose down
-\`\`\`
+```
 
 ### Déploiement de l'app uniquement
 
-\`\`\`bash
+```bash
 # Construire l'image
 docker build -t registration-qr-app .
 
@@ -268,7 +268,7 @@ docker build -t registration-qr-app .
 docker run -p 3000:3000 \
   -e DATABASE_URL="postgresql://user:password@host:port/db" \
   registration-qr-app
-\`\`\`
+```
 
 ## 🔄 Intégration dans une autre application
 
@@ -277,7 +277,7 @@ docker run -p 3000:3000 \
 L'application expose des API REST que vous pouvez utiliser pour l'intégrer dans une autre application :
 
 #### Enregistrement d'une personne
-\`\`\`javascript
+```javascript
 // Exemple avec fetch
 const response = await fetch('https://votre-domaine.com/api/register', {
   method: 'POST',
@@ -294,10 +294,10 @@ const response = await fetch('https://votre-domaine.com/api/register', {
 
 const data = await response.json();
 // data.qrCode contient le QR code à afficher
-\`\`\`
+```
 
 #### Vérification d'un QR code
-\`\`\`javascript
+```javascript
 // Exemple avec fetch
 const code = 'qr-code-data';
 const response = await fetch(`https://votre-domaine.com/api/verify?code=${encodeURIComponent(code)}`);
@@ -310,10 +310,10 @@ if (data.success) {
   // Personne non trouvée
   console.log(data.message);
 }
-\`\`\`
+```
 
 #### Récupération de la liste des personnes
-\`\`\`javascript
+```javascript
 // Exemple avec fetch
 const response = await fetch('https://votre-domaine.com/api/persons');
 const data = await response.json();
@@ -322,13 +322,13 @@ if (data.success) {
   // Liste des personnes
   console.log(data.persons);
 }
-\`\`\`
+```
 
 ### 2. Intégration via iframe
 
 Vous pouvez intégrer les pages de l'application dans une autre application via des iframes :
 
-\`\`\`html
+```html
 <!-- Intégration du formulaire d'enregistrement -->
 <iframe src="https://votre-domaine.com/register" width="100%" height="600px" frameborder="0"></iframe>
 
@@ -337,7 +337,7 @@ Vous pouvez intégrer les pages de l'application dans une autre application via 
 
 <!-- Intégration de la liste des personnes -->
 <iframe src="https://votre-domaine.com/persons" width="100%" height="700px" frameborder="0"></iframe>
-\`\`\`
+```
 
 ### 3. Intégration comme microservice
 
@@ -353,14 +353,14 @@ Vous pouvez déployer l'application comme un microservice dans votre architectur
 
 Le projet inclut déjà un `Dockerfile` optimisé pour Next.js. Pour construire l'image :
 
-\`\`\`bash
+```bash
 # Construire l'image
 docker build -t registration-qr-app:latest .
-\`\`\`
+```
 
 ### 2. Exécution de l'image Docker
 
-\`\`\`bash
+```bash
 # Exécuter le conteneur
 docker run -d \
   --name registration-app \
@@ -368,13 +368,13 @@ docker run -d \
   -e DATABASE_URL="postgresql://user:password@host:port/db" \
   -e NODE_ENV=production \
   registration-qr-app:latest
-\`\`\`
+```
 
 ### 3. Déploiement avec Docker Compose
 
 Le fichier `docker-compose.yml` inclut la configuration pour déployer l'application avec une base de données PostgreSQL :
 
-\`\`\`bash
+```bash
 # Démarrer les services
 docker-compose up -d
 
@@ -383,13 +383,13 @@ docker-compose down
 
 # Voir les logs
 docker-compose logs -f app
-\`\`\`
+```
 
 ### 4. Configuration des variables d'environnement Docker
 
 Vous pouvez configurer les variables d'environnement dans le fichier `docker-compose.yml` ou lors de l'exécution du conteneur :
 
-\`\`\`yaml
+```yaml
 # Extrait du docker-compose.yml
 services:
   app:
@@ -402,13 +402,13 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/registration_app
       - NODE_ENV=production
       # Ajoutez d'autres variables d'environnement ici
-\`\`\`
+```
 
 ### 5. Déploiement sur un registre Docker
 
 Pour déployer votre image sur un registre Docker (comme Docker Hub ou GitHub Container Registry) :
 
-\`\`\`bash
+```bash
 # Se connecter au registre
 docker login
 
@@ -417,13 +417,13 @@ docker tag registration-qr-app:latest username/registration-qr-app:latest
 
 # Pousser l'image
 docker push username/registration-qr-app:latest
-\`\`\`
+```
 
 ### 6. Déploiement sur Kubernetes
 
 Si vous utilisez Kubernetes, vous pouvez créer un fichier de déploiement `deployment.yaml` :
 
-\`\`\`yaml
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -463,17 +463,17 @@ spec:
   - port: 80
     targetPort: 3000
   type: ClusterIP
-\`\`\`
+```
 
 Puis appliquer la configuration :
 
-\`\`\`bash
+```bash
 kubectl apply -f deployment.yaml
-\`\`\`
+```
 
 ## 🔧 Commandes Utiles
 
-\`\`\`bash
+```bash
 # Développement
 npm run dev                    # Lancer en mode développement
 npm run build                  # Construire pour la production
@@ -490,7 +490,7 @@ npm run seed                 # Ajouter des données de test
 docker-compose up -d         # Lancer tous les services
 docker-compose down          # Arrêter tous les services
 docker-compose logs -f app   # Voir les logs de l'app
-\`\`\`
+```
 
 ## 🔒 Sécurité
 
@@ -523,27 +523,27 @@ docker-compose logs -f app   # Voir les logs de l'app
 ## 🐛 Dépannage
 
 ### Problème de connexion à la base de données
-\`\`\`bash
+```bash
 # Vérifier que PostgreSQL est lancé
 sudo systemctl status postgresql  # Linux
 brew services list | grep postgres  # macOS
 
 # Tester la connexion
 psql -h localhost -U postgres -d registration_app
-\`\`\`
+```
 
 ### Problème de permissions caméra
 - Vérifier que l'application est servie en HTTPS en production
 - Autoriser l'accès à la caméra dans les paramètres du navigateur
 
 ### Erreur de build Docker
-\`\`\`bash
+```bash
 # Nettoyer les images Docker
 docker system prune -a
 
 # Reconstruire sans cache
 docker-compose build --no-cache
-\`\`\`
+```
 
 ## 🤝 Contribution
 
@@ -573,4 +573,3 @@ Pour toute question ou problème :
 - [ ] API REST complète
 - [ ] Tests automatisés
 - [ ] Monitoring et logs
-# Convention_ticket
