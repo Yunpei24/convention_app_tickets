@@ -19,8 +19,8 @@ RUN apk add --no-cache openssl
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-# Utiliser la version locale de Prisma au lieu de npx
-RUN ./node_modules/.bin/prisma generate
+# Générer le client Prisma
+RUN npx prisma generate
 RUN yarn build
 
 # Image de production
@@ -32,17 +32,20 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN apk add --no-cache openssl
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
+# Copier les fichiers nécessaires
 COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+COPY --from=builder /app/node_modules ./node_modules
+
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
-# Utiliser la version locale de Prisma pour les migrations
-CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy && node server.js"]
+
+# Utiliser npx pour exécuter Prisma
+CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
