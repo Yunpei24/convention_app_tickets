@@ -48,4 +48,8 @@ ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
 # Utiliser npx pour exécuter Prisma
-CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+# CMD ["sh", "-c", "npx prisma migrate deploy && node server.js"]
+# Script de démarrage amélioré
+COPY --chown=nextjs:nodejs start.sh ./
+RUN chmod +x start.sh
+CMD ["./start.sh"]
